@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sala de Espera</title>
+
+    <style>
+        body{
+            background:#121212;
+            color:white;
+            font-family:Arial;
+            text-align:center;
+        }
+
+        .contenedor{
+            width:700px;
+            margin:auto;
+            margin-top:30px;
+        }
+
+        ul{
+            list-style:none;
+            padding:0;
+        }
+
+        li{
+            background:#1f1f1f;
+            padding:10px;
+            margin:10px;
+            border-radius:10px;
+        }
+
+        button{
+            padding:15px;
+            width:250px;
+            background:#0984e3;
+            color:white;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>🎮 Sala de Espera</h1>
+
+    <h2 id="codigo"></h2>
+
+    <h3 id="quiz"></h3>
+
+    <h2>👥 Participantes</h2>
+
+    <ul id="participantes"></ul>
+
+    <button onclick="iniciarQuiz()">
+        🚀 Iniciar Quiz
+    </button>
+
+</div>
+
+<script>
+
+    const params = new URLSearchParams(window.location.search);
+    const salaId = params.get("id");
+
+    if(!salaId){
+        document.body.innerHTML = "<h1>Error: sala no encontrada</h1>";
+    }
+
+    async function cargarSala(){
+
+        const res = await fetch("/salas/id/" + salaId);
+        const sala = await res.json();
+
+        if(!sala){
+            document.body.innerHTML = "<h1>Error: sala no existe</h1>";
+            return;
+        }
+
+        document.getElementById("codigo").innerHTML =
+            "Código: " + sala.codigo;
+
+        document.getElementById("quiz").innerHTML =
+            "Quiz: " + (sala.quiz ? sala.quiz.titulo : "Sin asignar");
+    }
+
+    async function cargarParticipantes(){
+
+        const res = await fetch("/participantes/sala/" + salaId);
+        const data = await res.json();
+
+        let lista = document.getElementById("participantes");
+        lista.innerHTML = "";
+
+        data.forEach(p => {
+            lista.innerHTML += `<li>👤 ${p.nombre}</li>`;
+        });
+    }
+
+    async function iniciarQuiz(){
+
+        await fetch("/salas/iniciar/" + salaId, {
+            method: "POST"
+        });
+
+        window.location.href = "/quiz?sala=" + salaId;
+    }
+
+    async function verificar(){
+
+        const res = await fetch("/salas/id/" + salaId);
+        const sala = await res.json();
+
+        if(sala && sala.iniciada){
+            window.location.href = "/quiz?sala=" + salaId;
+        }
+    }
+
+    cargarSala();
+    cargarParticipantes();
+
+    setInterval(cargarParticipantes, 3000);
+    setInterval(verificar, 2000);
+
+</script>
+
+</body>
+</html>

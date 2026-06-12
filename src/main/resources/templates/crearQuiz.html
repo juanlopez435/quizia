@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Crear Quiz</title>
+
+    <style>
+
+        body{
+            background:#121212;
+            color:white;
+            font-family:Arial;
+            text-align:center;
+            margin-top:50px;
+        }
+
+        input{
+            width:400px;
+            padding:12px;
+            font-size:18px;
+        }
+
+        button{
+            margin-top:20px;
+            width:250px;
+            padding:15px;
+            border:none;
+            border-radius:10px;
+            background:#0984e3;
+            color:white;
+            cursor:pointer;
+            font-size:18px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>Crear Quiz</h1>
+
+<input
+        type="text"
+        id="titulo"
+        placeholder="Título del Quiz"
+>
+
+<br>
+
+<button onclick="guardarQuiz()">
+    Guardar Quiz
+</button>
+
+<script>
+
+    async function guardarQuiz(){
+
+        const quiz = {
+
+            titulo:
+                document.getElementById("titulo").value
+        };
+
+        await fetch("/quizs/guardar",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(quiz)
+        });
+
+        alert("Quiz guardado correctamente");
+    }
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz en Vivo</title>
+
+    <style>
+
+        body{
+            background:#121212;
+            color:white;
+            font-family:Arial;
+            text-align:center;
+            margin-top:40px;
+        }
+
+        .contenedor{
+            width:600px;
+            margin:auto;
+            background:#1f1f1f;
+            padding:30px;
+            border-radius:20px;
+        }
+
+        button{
+            width:90%;
+            padding:15px;
+            margin-top:15px;
+            border:none;
+            border-radius:10px;
+            font-size:18px;
+            cursor:pointer;
+        }
+
+        .a{ background:#0984e3; color:white; }
+        .b{ background:#00b894; color:white; }
+        .c{ background:#fdcb6e; }
+        .d{ background:#d63031; color:white; }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>🎮 QUIZ EN VIVO</h1>
+
+    <h2 id="pregunta">Cargando...</h2>
+
+    <button class="a" onclick="responder('A')"></button>
+    <button class="b" onclick="responder('B')"></button>
+    <button class="c" onclick="responder('C')"></button>
+    <button class="d" onclick="responder('D')"></button>
+
+</div>
+
+<script>
+
+    const params = new URLSearchParams(window.location.search);
+    const salaId = params.get("sala");
+
+    let preguntas = [];
+    let index = 0;
+    let puntaje = 0;
+    let quizId = null;
+
+    async function iniciar(){
+
+        if(!salaId){
+            document.body.innerHTML = "Sala no válida";
+            return;
+        }
+
+        const resSala = await fetch("/salas/id/" + salaId);
+        const sala = await resSala.json();
+
+        if(!sala || !sala.quiz){
+            document.body.innerHTML = "Sala sin quiz";
+            return;
+        }
+
+        quizId = sala.quiz.id;
+
+        const resPreg = await fetch("/preguntas/quiz/" + quizId);
+        preguntas = await resPreg.json();
+
+        if(!preguntas || preguntas.length === 0){
+            document.body.innerHTML = "No hay preguntas";
+            return;
+        }
+
+        mostrar();
+    }
+
+    function mostrar(){
+
+        if(index >= preguntas.length){
+            window.location.href = "/ranking?sala=" + salaId;
+            return;
+        }
+
+        let p = preguntas[index];
+
+        document.getElementById("pregunta").innerHTML = p.pregunta;
+
+        document.querySelector(".a").innerHTML = "A) " + p.opcionA;
+        document.querySelector(".b").innerHTML = "B) " + p.opcionB;
+        document.querySelector(".c").innerHTML = "C) " + p.opcionC;
+        document.querySelector(".d").innerHTML = "D) " + p.opcionD;
+    }
+
+    async function responder(op){
+
+        let p = preguntas[index];
+
+        if(op === p.correcta){
+            puntaje++;
+        }
+
+        await fetch("/resultados/guardar", {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify({
+                nombre: "Jugador",
+                puntaje: puntaje,
+                quiz: { id: quizId }
+            })
+        });
+
+        index++;
+        mostrar();
+    }
+
+    iniciar();
+
+</script>
+
+</body>
+</html>

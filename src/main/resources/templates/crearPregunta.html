@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Pregunta</title>
+
+    <style>
+
+        body{
+            background:#121212;
+            color:white;
+            font-family:Arial;
+            text-align:center;
+        }
+
+        input, select{
+            width:400px;
+            padding:10px;
+            margin:10px;
+        }
+
+        button{
+            padding:15px;
+            width:250px;
+            background:#0984e3;
+            color:white;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>Crear Pregunta</h1>
+
+<select id="quiz">
+    <option value="">Seleccione un Quiz</option>
+</select>
+
+<br>
+
+<input id="pregunta" placeholder="Pregunta">
+
+<br>
+
+<input id="opcionA" placeholder="Opción A">
+
+<br>
+
+<input id="opcionB" placeholder="Opción B">
+
+<br>
+
+<input id="opcionC" placeholder="Opción C">
+
+<br>
+
+<input id="opcionD" placeholder="Opción D">
+
+<br>
+
+<input id="correcta" placeholder="Respuesta Correcta (A,B,C,D)">
+
+<br><br>
+
+<button onclick="guardarPregunta()">
+    Guardar Pregunta
+</button>
+
+<script>
+
+    async function cargarQuizs(){
+
+        const respuesta =
+            await fetch("http://localhost:8080/quizs/listar");
+
+        const quizs =
+            await respuesta.json();
+
+        let select =
+            document.getElementById("quiz");
+
+        quizs.forEach(quiz => {
+
+            select.innerHTML += `
+                <option value="${quiz.id}">
+                    ${quiz.titulo}
+                </option>
+            `;
+        });
+    }
+
+    async function guardarPregunta(){
+
+        const quizId =
+            document.getElementById("quiz").value;
+
+        const pregunta = {
+
+            pregunta:
+                document.getElementById("pregunta").value,
+
+            opcionA:
+                document.getElementById("opcionA").value,
+
+            opcionB:
+                document.getElementById("opcionB").value,
+
+            opcionC:
+                document.getElementById("opcionC").value,
+
+            opcionD:
+                document.getElementById("opcionD").value,
+
+            correcta:
+                document.getElementById("correcta").value,
+
+            quiz:{
+                id: quizId
+            }
+        };
+
+        await fetch("/preguntas/guardar",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(pregunta)
+        });
+
+        alert("Pregunta guardada");
+    }
+
+    cargarQuizs();
+
+</script>
+
+</body>
+</html>

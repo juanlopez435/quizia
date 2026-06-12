@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz IA</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #121212;
+            color: white;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .contenedor{
+            width: 400px;
+            margin: auto;
+            background: #1f1f1f;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        input{
+            width: 90%;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: none;
+        }
+
+        button{
+            margin-top: 20px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #00b894;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background: #00a383;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>Quiz IA</h1>
+
+    <h3>Ingresa tu nombre</h3>
+
+    <input
+            type="text"
+            id="nombre"
+            placeholder="Tu nombre">
+
+    <br>
+
+    <button onclick="entrar()">
+        Entrar
+    </button>
+
+</div>
+
+<script>
+
+    function entrar(){
+
+        let nombre =
+            document.getElementById("nombre").value;
+
+        window.location.href =
+        "http://localhost:8080/home";
+    }
+
+</script>
+
+</body>
+</html>
