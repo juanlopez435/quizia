@@ -99,13 +99,16 @@
 
         if(index >= preguntas.length){
 
+            const nombreJugador =
+                localStorage.getItem("nombreJugador") || "Jugador";
+
             await fetch("/resultados/guardar",{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify({
-                    nombre:"Jugador",
+                    nombre:nombreJugador,
                     puntaje:puntaje,
                     quiz:{
                         id:quizId
@@ -127,7 +130,7 @@
         document.querySelector(".d").innerHTML = "D) " + p.opcionD;
     }
 
-    async function responder(op){
+    function responder(op){
 
         let p = preguntas[index];
 
@@ -145,3 +148,4 @@
 
 </body>
 </html>
+```

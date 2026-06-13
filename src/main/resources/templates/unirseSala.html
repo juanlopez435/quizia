@@ -25,6 +25,7 @@
         button{
             width:200px;
             padding:10px;
+            cursor:pointer;
         }
 
     </style>
@@ -60,15 +61,23 @@
     async function entrarSala(){
 
         const nombre =
-            document.getElementById("nombre").value;
+            document.getElementById("nombre").value.trim();
 
         const codigo =
-            document.getElementById("codigo").value;
+            document.getElementById("codigo").value.trim();
+
+        if(nombre === ""){
+            alert("Ingrese su nombre");
+            return;
+        }
+
+        if(codigo === ""){
+            alert("Ingrese el código de la sala");
+            return;
+        }
 
         const respuesta =
-            await fetch(
-                "/salas/codigo/" + codigo
-            );
+            await fetch("/salas/codigo/" + codigo);
 
         const sala =
             await respuesta.json();
@@ -102,12 +111,12 @@
             body:JSON.stringify(participante)
         });
 
-        document.getElementById("resultado")
-            .innerHTML =
-            "✅ Bienvenido " +
-            nombre +
-            " a la sala " +
-            sala.codigo;
+        // Guardar el nombre para usarlo en el quiz
+        localStorage.setItem("nombreJugador", nombre);
+
+        // Entrar automáticamente al quiz
+        window.location.href = "/quiz?sala=" + sala.id;
+
     }
 
 </script>
