@@ -108,15 +108,49 @@
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify({
-                    nombre:nombreJugador,
-                    puntaje:puntaje,
+                    nombre: nombreJugador,
+                    puntaje: puntaje,
                     quiz:{
-                        id:quizId
+                        id: quizId
                     }
                 })
             });
 
-            window.location.href="/ranking";
+            document.body.innerHTML = `
+            <div style="
+                background:#121212;
+                color:white;
+                font-family:Arial;
+                text-align:center;
+                margin-top:100px;
+            ">
+
+                <h1>🎉 ¡Quiz terminado!</h1>
+
+                <h2>🏆 Tu puntaje fue</h2>
+
+                <h1>${puntaje} de ${preguntas.length}</h1>
+
+                <br>
+
+                <button
+                    style="
+                        padding:15px;
+                        width:250px;
+                        font-size:20px;
+                        cursor:pointer;
+                        border:none;
+                        border-radius:10px;
+                        background:#0984e3;
+                        color:white;
+                    "
+                    onclick="window.location.href='/ranking'">
+                    Ver Ranking
+                </button>
+
+            </div>
+            `;
+
             return;
         }
 
@@ -148,4 +182,4 @@
 
 </body>
 </html>
-```
+

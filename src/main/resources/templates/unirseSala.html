@@ -111,8 +111,9 @@
             body:JSON.stringify(participante)
         });
 
-        // Guardar el nombre para usarlo en el quiz
+        // Guardar datos del jugador
         localStorage.setItem("nombreJugador", nombre);
+        localStorage.setItem("salaId", sala.id);
 
         // Entrar automáticamente al quiz
         window.location.href = "/quiz?sala=" + sala.id;
@@ -124,3 +125,4 @@
 </body>
 
 </html>
+```
