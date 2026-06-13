@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -53,7 +54,6 @@
 
     <h1>🎯 QUIZIA DASHBOARD</h1>
 
-    <!-- QUIZ -->
     <div class="box">
         <h2>Crear Quiz</h2>
         <input id="tituloQuiz" placeholder="Título del Quiz">
@@ -61,7 +61,6 @@
         <button onclick="crearQuiz()">Crear</button>
     </div>
 
-    <!-- PREGUNTA -->
     <div class="box">
         <h2>Crear Pregunta</h2>
 
@@ -81,7 +80,6 @@
         <button onclick="crearPregunta()">Guardar</button>
     </div>
 
-    <!-- SALA -->
     <div class="box">
         <h2>Crear Sala</h2>
 
@@ -111,18 +109,28 @@
 
         quizs.forEach(q => {
 
-            select1.innerHTML += `<option value="${q.id}">${q.titulo}</option>`;
-            select2.innerHTML += `<option value="${q.id}">${q.titulo}</option>`;
+            select1.innerHTML +=
+                `<option value="${q.id}">
+                    ${q.titulo}
+                </option>`;
+
+            select2.innerHTML +=
+                `<option value="${q.id}">
+                    ${q.titulo}
+                </option>`;
         });
     }
 
     async function crearQuiz(){
 
-        const titulo = document.getElementById("tituloQuiz").value;
+        const titulo =
+            document.getElementById("tituloQuiz").value;
 
         await fetch("/quizs/guardar",{
             method:"POST",
-            headers:{ "Content-Type":"application/json" },
+            headers:{
+                "Content-Type":"application/json"
+            },
             body: JSON.stringify({titulo})
         });
 
@@ -133,18 +141,36 @@
     async function crearPregunta(){
 
         const pregunta = {
-            pregunta: document.getElementById("pregunta").value,
-            opcionA: document.getElementById("a").value,
-            opcionB: document.getElementById("b").value,
-            opcionC: document.getElementById("c").value,
-            opcionD: document.getElementById("d").value,
-            correcta: document.getElementById("correcta").value,
-            quiz:{ id: document.getElementById("quizSelect").value }
+
+            pregunta:
+                document.getElementById("pregunta").value,
+
+            opcionA:
+                document.getElementById("a").value,
+
+            opcionB:
+                document.getElementById("b").value,
+
+            opcionC:
+                document.getElementById("c").value,
+
+            opcionD:
+                document.getElementById("d").value,
+
+            correcta:
+                document.getElementById("correcta").value,
+
+            quiz:{
+                id:
+                document.getElementById("quizSelect").value
+            }
         };
 
         await fetch("/preguntas/guardar",{
             method:"POST",
-            headers:{ "Content-Type":"application/json" },
+            headers:{
+                "Content-Type":"application/json"
+            },
             body: JSON.stringify(pregunta)
         });
 
@@ -153,19 +179,27 @@
 
     async function crearSala(){
 
-        const quizId = document.getElementById("quizSala").value;
+        const quizId =
+            document.getElementById("quizSala").value;
 
-        const res = await fetch("/salas/guardar",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body: JSON.stringify({
-                quiz: { id: quizId }
-            })
-        });
+        const res =
+            await fetch("/salas/guardar",{
 
-        const sala = await res.json();
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body: JSON.stringify({
+                    quiz:{
+                        id: quizId
+                    }
+                })
+            });
+
+        const sala =
+            await res.json();
 
         console.log("SALA:", sala);
 
@@ -174,7 +208,18 @@
             return;
         }
 
-        window.location.href = "/sala?id=" + sala.id;
+        localStorage.setItem(
+            "salaId",
+            sala.id
+        );
+
+        localStorage.setItem(
+            "codigoSala",
+            sala.codigo
+        );
+
+        window.location.href =
+            "/unirseSala?codigo=" + sala.codigo;
     }
 
     cargarQuizs();
@@ -183,3 +228,4 @@
 
 </body>
 </html>
+

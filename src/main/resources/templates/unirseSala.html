@@ -58,6 +58,18 @@
 
 <script>
 
+    const params = new URLSearchParams(window.location.search);
+    const codigoUrl = params.get("codigo");
+
+    window.onload = function(){
+
+        if(codigoUrl){
+
+            document.getElementById("codigo").value =
+                codigoUrl;
+        }
+    };
+
     async function entrarSala(){
 
         const nombre =
@@ -111,13 +123,18 @@
             body:JSON.stringify(participante)
         });
 
-        // Guardar datos del jugador
-        localStorage.setItem("nombreJugador", nombre);
-        localStorage.setItem("salaId", sala.id);
+        localStorage.setItem(
+            "nombreJugador",
+            nombre
+        );
 
-        // Entrar automáticamente al quiz
-        window.location.href = "/quiz?sala=" + sala.id;
+        localStorage.setItem(
+            "salaId",
+            sala.id
+        );
 
+        window.location.href =
+            "/quiz?sala=" + sala.id;
     }
 
 </script>
@@ -125,4 +142,5 @@
 </body>
 
 </html>
-```
+
+
